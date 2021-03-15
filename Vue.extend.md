@@ -63,10 +63,20 @@ Vue.extend = function (extendOptions: Object): Function {
 }
 ```
 
-- 存在_Ctor时，返回原组件类
-- 不存在
-  - 创建新组件类Sub
+- 已构造过组件时，返回已构造的组件
+- 未构造过
+  - 创建新组件类Sub，生成唯一cid
   - 传入的参数与Vue.options合并然后赋值给Sub.options
   - 存在props与computed时在property上创建映射
-  - 传递静态方法
+  - 继承ASSET_TYPES
+  - 存在name时，将自身存入可以组件的哈希表
+  - 记录继承的options和自身的options
   - 存储Sub至\_Ctor
+
+#### Vue.component
+
+Vue.component内部通过Vue.extend构造组件
+
+#### Vue.mixin
+
+Vue.mixin通过mergeOption重新创建一个新的options，所以会造成生成组件时需通过resolveConstructorOptions校验options

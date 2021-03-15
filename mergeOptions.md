@@ -207,7 +207,7 @@ data、provide使用mergeDataOrFn进行合并
 
 watch使用parentVal和childVal的并集，childVal排序在后面
 
-props、methods、inject、computed使用parentVal和childVal的去重并集，重合时使用childVal的值
+props、methods、inject、computed使用extend合并parentVal和childVal，key相同时使用childVal的值
 
 ASSET_TYPES中的属性使用mergeAssets
 

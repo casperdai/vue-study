@@ -2,23 +2,22 @@
 
 源码阅读
 
-[前置]: ./前置.md
-[命名转换]: ./命名转换函数.md
-[入口]: ./入口.md
-[属性合并]: ./mergeOptions.md
-[初始化]: ./初始化.md
-[Vue.extend]: ./Vue.extend.md
-[初始化]: ./初始化.md
-[初始化]: ./初始化.md
+[前置](./前置.md)
+[命名转换](./命名转换.md)
+[入口](./入口.md)
+[属性合并](./mergeOptions.md)
+[初始化](./初始化.md)
+[Vue.extend](./Vue.extend.md)
 
 响应式
 
-[数据动态响应]: ./数据动态响应.md
+[数据动态响应](./数据动态响应.md)
 
 虚拟DOM
 
-[patch]: ./patch.md
-[生成dom]: ./vdom2dom.md
+[生成vnode](./patch1.md)
+[patch](./patch2.md)
+[生成dom](./vdom2dom.md)
 
 ##### 流程
 
