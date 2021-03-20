@@ -26,6 +26,9 @@
 [属性合并](./mergeOptions.md)
 [Vue.extend](./Vue.extend.md)
 [slot](./slot.md)
+[ref](./ref.md)
+[v-model](./v-model.md)
+[自定义指令](./directives.md)
 
 ##### 流程
 
