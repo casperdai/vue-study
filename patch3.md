@@ -1,4 +1,5 @@
 ```
+src/core/vdom/patch.js
 return function patch (oldVnode, vnode, hydrating, removeOnly) {
   if (isUndef(vnode)) {
     if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
@@ -118,6 +119,7 @@ return function patch (oldVnode, vnode, hydrating, removeOnly) {
 ##### createElm
 
 ```
+src/core/vdom/patch.js
 function createElm (
   vnode,
   insertedVnodeQueue,
@@ -203,6 +205,7 @@ function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
 
 
 ```
+src/core/vdom/patch.js
 function patchVnode (
   oldVnode,
   vnode,
@@ -295,6 +298,7 @@ function patchVnode (
 
 
 ```
+src/core/vdom/patch.js
 function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
   let oldStartIdx = 0
   let newStartIdx = 0

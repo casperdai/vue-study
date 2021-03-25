@@ -43,3 +43,5 @@
 [v-model](./v-model.md)
 
 [自定义指令](./directives.md)
+
+[组件实例化](./component.md)
