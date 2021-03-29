@@ -36,21 +36,29 @@
 
 [ref](./ref.md)
 
-[directive](./directives.md)
+[directives](./directives.md)
 
-[attr](./attrs.md)
+[attrs](./attrs.md)
 
 [class](./class.md)
 
-[event](./events.md)
+[events](./events.md)
+
+[domProps](./domProps.md)
 
 [style](./style.md)
+
+[transition](./transition.md)
+
+##### 内置指令
+
+[v-model](./v-model.md)
+
+[v-show](./v-show.md)
 
 ##### 源码
 
 [属性合并](./mergeOptions.md)
-
-[Vue.extend](./Vue.extend.md)
 
 [v-model](./v-model.md)
 

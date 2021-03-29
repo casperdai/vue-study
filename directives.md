@@ -91,7 +91,7 @@ function _update (oldVnode, vnode) {
 1. 旧vnode为空节点时为创建流程，新vnode为空节点时为销毁流程
 2. 获取新旧指令的描述
 3. 对比新旧指令集合，仅存在于新vnode中的触发指令bind钩子并存入新增指令集合中，新旧vnode均存在时触发指令update钩子并存入更新指令集合中
-4. 有新增的指令时，当为创建流程时创建一个data.hook.insert的调用，否则直接触发指令insert钩子（复用节点时）
+4. 有新增的指令时，当为创建流程时创建一个data.hook.insert的调用，否则直接触发指令inserted钩子（复用节点时）
 5. 有更新的指令时，创建一个data.hook.postpatch的调用待节点patch完成后触发指令componentUpdated钩子
 6. 不是创建流程时，若旧指令集合中有不存在于新指令集合的指令时，触发指令unbind钩子
 

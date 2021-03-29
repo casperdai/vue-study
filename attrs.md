@@ -5,9 +5,6 @@ _c('div',{attrs:{"prop":"propVal"}})
 <div :prop="propVal"></div>
 _c('div',{attrs:{"prop":propVal}})
 
-<div :prop.prop="propVal"></div>
-_c('div',{domProps:{"prop":propVal}})
-
 <div :prop-key.camel="propVal"></div>
 _c('div',{attrs:{"propKey":propVal}})
 不添加时为prop-key
@@ -15,14 +12,11 @@ _c('div',{attrs:{"propKey":propVal}})
 <div :prop.sync="propVal"></div>
 _c('div',{attrs:{"prop":propVal},on:{"update:prop":function($event){propVal=$event}}})
 
-<div v-bind="props"></div
-_c('div',_b({},'div',props,false))
-
-<div v-bind.prop.sync="props"></div
-_c('div',_b({},'div',props,true,true))
+<div v-bind.sync="props"></div
+_c('div',_b({},'div',props,false,true))
 ```
 
-解析成render函数时，根据修饰符进行事件名修改或添加额外处理
+解析成render函数时，根据修饰符进行特性名修改或添加额外处理
 
 ```
 _b = bindObjectProps
@@ -78,10 +72,14 @@ export function bindObjectProps (
 }
 ```
 
-属性描述对象中除去保留字段外根据描述合并至data中
+属性描述对象中满足下列条件的属性合并至data.attrs中
 
-- 若asProp为true则合并至data.domProps中，否则根据tag等检测合并至data.domProps或data.attrs中
-- 若将存放至的字典中已存在同名属性则丢弃，否则进行添加并根据isSync进行更新事件的处理
+- 不是保留字段
+- 未添加prop修饰符
+- vnode不是元素vnode或不是元素的特殊特性
+- data.attrs未定义同名属性
+
+因为数组是通过toObject解析，所以数组时内容只能为对象且同key属性后面会覆盖前面的
 
 ```
 src/platforms/web/runtime/modules/attrs.js
@@ -132,8 +130,8 @@ function updateAttrs (oldVnode: VNodeWithData, vnode: VNodeWithData) {
 }
 ```
 
-属性模块会在create、update三个阶段被触发，用于将未被props引用的atrrs设置至dom元素或从dom元素上移除
+属性模块会在create、update两个阶段被触发，用于将未被props引用的atrrs设置至dom元素或从dom元素上移除
 
-1. 若是组件vnode且组件定义inheritAttrs为false时跳过attrs处理
-2. 若attr之前不存在或值有变化则进行设置
-3. 若有多余的attr则进行移除
+1. 若是组件vnode且组件定义inheritAttrs为false时或无attrs时跳过attrs处理
+2. 若有值不一致的特性则进行设置
+3. 若有多余的特性则进行移除
