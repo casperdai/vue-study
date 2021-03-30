@@ -56,13 +56,21 @@
 
 [v-show](./v-show.md)
 
+##### 模板解析
+
+[compile](./compile.md)
+
+[ast parseHTML](./parseHTML.md)
+
+[ast parse](./parse.md)
+
+[ast ASTElement实例](./ASTElement.md)
+
 ##### 源码
 
 [属性合并](./mergeOptions.md)
 
-[v-model](./v-model.md)
+[组件实例化](./component.md)
 
 [slot](./slot.md)
-
-[组件实例化](./component.md)
 
