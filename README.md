@@ -60,11 +60,19 @@
 
 [compile](./compile.md)
 
-[ast parseHTML](./parseHTML.md)
+[modules](./compile-modules.md)
 
-[ast parse](./parse.md)
+[directives](./compile-directives.md)
 
-[ast ASTElement实例](./ASTElement.md)
+[AST parse](./ast-parse.md)
+
+[AST parseHTML](./ast-parseHTML.md)
+
+[AST 属性处理相关函数](./ast-fn.md)
+
+[AST attrs](./ast-attrs.md)
+
+[optimize](./optimize.md)
 
 ##### 源码
 

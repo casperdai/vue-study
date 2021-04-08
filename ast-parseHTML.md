@@ -1,39 +1,4 @@
 ```
-src/compiler/parser/index.js
-export function parse (
-  template: string,
-  options: CompilerOptions
-): ASTElement | void {
-  ...
-  parseHTML(template, {
-    warn,
-    expectHTML: options.expectHTML,
-    isUnaryTag: options.isUnaryTag,
-    canBeLeftOpenTag: options.canBeLeftOpenTag,
-    shouldDecodeNewlines: options.shouldDecodeNewlines,
-    shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
-    shouldKeepComment: options.comments,
-    outputSourceRange: options.outputSourceRange,
-    start (tag, attrs, unary, start, end) {
-      ...
-    },
-    end: function end (tag, start, end$1) {
-      ...
-    },
-    chars: function chars (text, start, end) {
-      ...
-    },
-    comment: function comment (text, start, end) {
-      ...
-    }
-  })
-  return root
-}
-```
-
-parse主要同parseHTML进行模板解析
-
-```
 src/compiler/parser/html-parser.js
 export function parseHTML (html, options) {
   const stack = []
@@ -292,7 +257,7 @@ function handleStartTag (match) {
 handleStartTag用于根据标签描述来预处理数据，主要进行了下列操作：
 
 1. 若有未闭合标签，根据一定规则（是否能嵌套等）进行闭合
-2. 预处理attrs
+2. 预处理attrs，所有attr都将转化为{ name: string, value: string, start: int, end: int }格式
 3. 若不是一元标签（不能有子节点）时，入栈作为当前正在处理的未闭合标签
 4. 进行start处理
 

@@ -10,6 +10,8 @@ export { compile, compileToFunctions }
 
 创建编译器，template通过compileToFunctions转化为render函数
 
+compile和compileToFunctions均有render和staticRenderFns属性，区别是compile对应字面量而compileToFunctions对应函数
+
 ```
 src/platforms/web/compiler/options.js
 import {
@@ -38,25 +40,7 @@ export const baseOptions: CompilerOptions = {
 }
 ```
 
-编译选项，主要关注模块与指令
-
-```
-src/platforms/web/compiler/modules/index.js
-export default [
-  klass,
-  style,
-  model
-]
-
-src/platforms/web/compiler/directives/index.js
-export default {
-  model,
-  text,
-  html
-}
-```
-
-编译时特殊处理的有class、style和model，编译时指令有v-model，v-text和v-html
+baseOptions提供编译时需使用的配置
 
 ```
 src/compiler/index.js
@@ -85,9 +69,7 @@ export const createCompiler = createCompilerCreator(function baseCompile (
 })
 ```
 
-通过parse函数将模板转化为ast（抽象语法树），然后通过generate函数生成render函数
-
-modules在parse和generate均会使用，directives仅作用于generate
+通过parse函数将模板转化为ast（抽象语法树），然后通过optimize进行优化标记，最终通过generate函数生成render与staticRenderFns函数内容
 
 ```
 src/compiler/codegen/index.js
@@ -105,7 +87,7 @@ export function parse (
 parse会根据模板返回ast
 
 ```
-src/compiler/create-compiler.js
+src/compiler/codegen/index.js
 export function generate (
   ast: ASTElement | void,
   options: CompilerOptions
