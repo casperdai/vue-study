@@ -74,6 +74,8 @@
 
 [optimize](./optimize.md)
 
+[generate](./generate.md)
+
 ##### 源码
 
 [属性合并](./mergeOptions.md)

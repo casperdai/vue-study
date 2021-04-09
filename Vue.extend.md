@@ -1,3 +1,5 @@
+##### Vue.extend
+
 ```
 Vue.extend = function (extendOptions: Object): Function {
   extendOptions = extendOptions || {}
@@ -68,15 +70,70 @@ Vue.extend = function (extendOptions: Object): Function {
   - 创建新组件类Sub，生成唯一cid
   - 传入的参数与Vue.options合并然后赋值给Sub.options
   - 存在props与computed时在property上创建映射
-  - 继承ASSET_TYPES
-  - 存在name时，将自身存入可以组件的哈希表
+  - 继承ASSET_TYPES相关函数
+  - 存在name时，将自身放入组件哈希表
   - 记录继承的options和自身的options
   - 存储Sub至\_Ctor
 
-#### Vue.component
+#### Vue.component、Vue.directive、Vue.filter
+
+```
+src/core/global-api/assets.js
+import { ASSET_TYPES } from 'shared/constants'
+import { isPlainObject, validateComponentName } from '../util/index'
+
+export function initAssetRegisters (Vue: GlobalAPI) {
+  /**
+   * Create asset registration methods.
+   */
+  ASSET_TYPES.forEach(type => {
+    Vue[type] = function (
+      id: string,
+      definition: Function | Object
+    ): Function | Object | void {
+      if (!definition) {
+        return this.options[type + 's'][id]
+      } else {
+        /* istanbul ignore if */
+        if (process.env.NODE_ENV !== 'production' && type === 'component') {
+          validateComponentName(id)
+        }
+        if (type === 'component' && isPlainObject(definition)) {
+          definition.name = definition.name || id
+          definition = this.options._base.extend(definition)
+        }
+        if (type === 'directive' && typeof definition === 'function') {
+          definition = { bind: definition, update: definition }
+        }
+        this.options[type + 's'][id] = definition
+        return definition
+      }
+    }
+  })
+}
+
+src/shared/constants.js
+export const ASSET_TYPES = [
+  'component',
+  'directive',
+  'filter'
+]
+```
 
 Vue.component内部通过Vue.extend构造组件
 
+3种数据均存放在Vue.options的对应分类中
+
 #### Vue.mixin
+
+```
+src/core/global-api/mixin.js
+export function initMixin (Vue: GlobalAPI) {
+  Vue.mixin = function (mixin: Object) {
+    this.options = mergeOptions(this.options, mixin)
+    return this
+  }
+}
+```
 
 Vue.mixin通过mergeOption重新创建一个新的options，所以会造成生成组件时需通过resolveConstructorOptions校验options

@@ -10,7 +10,7 @@ export { compile, compileToFunctions }
 
 创建编译器，template通过compileToFunctions转化为render函数
 
-compile和compileToFunctions均有render和staticRenderFns属性，区别是compile对应字面量而compileToFunctions对应函数
+compile和compileToFunctions均有render和staticRenderFns属性，区别是compile对应函数字面量而compileToFunctions对应函数
 
 ```
 src/platforms/web/compiler/options.js
@@ -70,35 +70,3 @@ export const createCompiler = createCompilerCreator(function baseCompile (
 ```
 
 通过parse函数将模板转化为ast（抽象语法树），然后通过optimize进行优化标记，最终通过generate函数生成render与staticRenderFns函数内容
-
-```
-src/compiler/codegen/index.js
-/**
- * Convert HTML string to AST.
- */
-export function parse (
-  template: string,
-  options: CompilerOptions
-): ASTElement | void {
- ...
-}
-```
-
-parse会根据模板返回ast
-
-```
-src/compiler/codegen/index.js
-export function generate (
-  ast: ASTElement | void,
-  options: CompilerOptions
-): CodegenResult {
-  const state = new CodegenState(options)
-  const code = ast ? genElement(ast, state) : '_c("div")'
-  return {
-    render: `with(this){return ${code}}`,
-    staticRenderFns: state.staticRenderFns
-  }
-}
-```
-
-generate根据parse解析出的ast生成render函数

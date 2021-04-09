@@ -15,7 +15,7 @@ export function initRender (vm: Component) {
 
 $slots保存了未定义作用域的插槽的节点数据
 
-$scopedSlots保存的各个slot节点数据的构造函数
+$scopedSlots保存了插槽节点数据的构造函数
 
 ```
 <component><div></div></component>
