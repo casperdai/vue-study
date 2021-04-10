@@ -64,7 +64,10 @@ export function createComponent (
   // extract props
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
-  ...
+  // functional component
+  if (isTrue(Ctor.options.functional)) {
+    return createFunctionalComponent(Ctor, propsData, data, context, children)
+  }
 
   // extract listeners, since these needs to be treated as
   // child component listeners instead of DOM listeners
@@ -96,9 +99,58 @@ export function createComponent (
 1. 构造函数更新
 2. 处理v-model
 3. propsData获取，从data.attrs中过滤出定义的props
-4. 替换事件，listeners = data.on，data.on = data.nativeOn
-5. 添加hooks
-6. 创建vnode，componentOptions = { Ctor, propsData, listeners, tag, children }
+4. 若是函数式组件返回**createFunctionalComponent**构造的vnode，跳出
+5. 替换事件，listeners = data.on，data.on = data.nativeOn
+6. 添加hooks
+7. 创建vnode，componentOptions = { Ctor, propsData, listeners, tag, children }
+
+##### 函数式组件
+
+```
+src/core/vdom/create-functional-component.js
+export function createFunctionalComponent (
+  Ctor: Class<Component>,
+  propsData: ?Object,
+  data: VNodeData,
+  contextVm: Component,
+  children: ?Array<VNode>
+): VNode | Array<VNode> | void {
+  const options = Ctor.options
+  const props = {}
+  const propOptions = options.props
+  if (isDef(propOptions)) {
+    for (const key in propOptions) {
+      props[key] = validateProp(key, propOptions, propsData || emptyObject)
+    }
+  } else {
+    if (isDef(data.attrs)) mergeProps(props, data.attrs)
+    if (isDef(data.props)) mergeProps(props, data.props)
+  }
+
+  const renderContext = new FunctionalRenderContext(
+    data,
+    props,
+    children,
+    contextVm,
+    Ctor
+  )
+
+  const vnode = options.render.call(null, renderContext._c, renderContext)
+
+  if (vnode instanceof VNode) {
+    return cloneAndMarkFunctionalResult(vnode, data, renderContext.parent, options, renderContext)
+  } else if (Array.isArray(vnode)) {
+    const vnodes = normalizeChildren(vnode) || []
+    const res = new Array(vnodes.length)
+    for (let i = 0; i < vnodes.length; i++) {
+      res[i] = cloneAndMarkFunctionalResult(vnodes[i], data, renderContext.parent, options, renderContext)
+    }
+    return res
+  }
+}
+```
+
+函数式组件仅透传render函数生成的数据，为render函数提供一个封装过的上下文环境
 
 ##### 实例化
 

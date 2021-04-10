@@ -36,14 +36,11 @@ _c('component',{scopedSlots:_u([{key:"slotKey",fn:function(scopedProps){return [
 <component><template v-slot:[slotKey]><div></div></template></component>
 _c('component',{scopedSlots:_u([{key:slotKey,fn:function(){return [_c('div')]},proxy:true}],null,true)})
 
-<component><div slot="slotKey"></div></component>
-_c('component',[_c('div',{attrs:{"slot":"slotKey"},slot:"slotKey"})])
-
 <slot :prop="prop" v-bind="props"><div></div></slot>
 _t("default",[_c('div')],{"prop":prop},props)
 ```
 
-废弃的slot语法以及新语法的具名插槽不会解析成构造函数存储在data.scopedSlots中，需进行slots解析
+具名插槽会解析成构造函数存储在data.scopedSlots中，需进行slots解析
 
 ```
 _u = resolveScopedSlots
@@ -348,6 +345,6 @@ export function updateChildComponent (
 }
 ```
 
-vnode.componentOptions.children中放置需进行slots解析的节点数据
+vnode.componentOptions.children中放置需进行resolveSlots解析的节点数据
 
 vnode.data.scopedSlots中放置具名插槽的构造函数
