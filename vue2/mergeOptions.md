@@ -1,6 +1,7 @@
-### 策略(src/core/util/options.js)
+##### 策略
 
 ```
+src/core/util/options.js
 export function mergeDataOrFn (
   parentVal: any,
   childVal: any,
@@ -118,7 +119,7 @@ const defaultStrat = function (parentVal: any, childVal: any): any {
 - mergeHook：parentVal和childVal的去重并集，childVal排序在后面
 - defaultStrat：优先childVal
 
-### 属性的合并策略
+##### 属性的合并策略
 
 ```
 strats.data = function (
@@ -213,7 +214,7 @@ ASSET_TYPES中的属性使用mergeAssets
 
 LIFECYCLE_HOOKS中的属性使用mergeHook
 
-#### 合并
+##### 合并
 
 ```
 export function mergeOptions (

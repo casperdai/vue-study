@@ -1,8 +1,6 @@
-### Vue2
+### Vue(2.6.11)
 
 ##### 基本
-
-[前置](./vue2/前置.md)
 
 [入口](./vue2/入口.md)
 
@@ -22,13 +20,17 @@
 
 [计算属性](./vue2/reactive/computed.md)
 
+[$set $delete](./vue2/reactive/set2del.md)
+
 ##### 虚拟DOM
 
-[vnode](./vue2/patch/vnode.md)
+[概念](./vue2/patch/vnode.md)
 
-[基本流程](./vue2/patch/patch.md)
+[patch](./vue2/patch/patch.md)
 
-[diff](./vue2/patch/diff.md)
+[组件实例化](./vue2/patch/component.md)
+
+[小结](./patch/summary.md)
 
 ##### 内置模块
 
@@ -82,7 +84,30 @@
 
 [属性合并](./vue2/mergeOptions.md)
 
-[组件实例化](./vue2/component.md)
+[全局API](./vue2/global-api.md)
 
 [slot](./vue2/slot.md)
 
+### Vue Router(3.5.1)
+
+[install](./vue-router/install.md)
+
+[VueRouter](./vue-router/VueRouter.md)
+
+[match](./vue-router/match.md)
+
+[History](./vue-router/History.md)
+
+[router-link](./vue-router/router-link.md)
+
+[router-view](./vue-router/router-view.md)
+
+### Vuex(3.6.2)
+
+[install](./vuex/install.md)
+
+[Store](./vuex/Store.md)
+
+[Module](./vuex/Module.md)
+
+[map](./vuex/map.md)

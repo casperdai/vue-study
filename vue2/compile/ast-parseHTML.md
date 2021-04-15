@@ -164,7 +164,7 @@ if (options.chars && text) {
    1. 若为注释且有结束符号，进行comment处理然后跳至结束符号后一位进入下次循环
    2. 若为条件注释且有结束符号，跳至结束符号后一位进入下次循环
    3. 若为doctype，跳至doctype后一位进入下次循环
-   4. 若parseStartTag能检测到有效标签，进行标签解析handleStartTag后进入下次循环
+   4. 若parseStartTag能检测到有效标签，进行标签解析`handleStartTag`后进入下次循环
 3. 存在<符号时，将第一个有效<符号之前的内容作为文本内容
 4. 不存在<符号时，剩余模板均作为文本内容
 5. 若存在文本内容则进行chars处理

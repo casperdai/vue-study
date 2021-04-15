@@ -75,7 +75,7 @@ Vue.extend = function (extendOptions: Object): Function {
   - 记录继承的options和自身的options
   - 存储Sub至\_Ctor
 
-#### Vue.component、Vue.directive、Vue.filter
+##### Vue.component、Vue.directive、Vue.filter
 
 ```
 src/core/global-api/assets.js
@@ -124,7 +124,7 @@ Vue.component内部通过Vue.extend构造组件
 
 3种数据均存放在Vue.options的对应分类中
 
-#### Vue.mixin
+##### Vue.mixin
 
 ```
 src/core/global-api/mixin.js
@@ -137,3 +137,88 @@ export function initMixin (Vue: GlobalAPI) {
 ```
 
 Vue.mixin通过mergeOption重新创建一个新的options，所以会造成生成组件时需通过resolveConstructorOptions校验options
+
+##### Vue.use
+
+```
+src/core/global-api/use.js
+export function initUse (Vue: GlobalAPI) {
+  Vue.use = function (plugin: Function | Object) {
+    const installedPlugins = (this._installedPlugins || (this._installedPlugins = []))
+    if (installedPlugins.indexOf(plugin) > -1) {
+      return this
+    }
+
+    // additional parameters
+    const args = toArray(arguments, 1)
+    args.unshift(this)
+    if (typeof plugin.install === 'function') {
+      plugin.install.apply(plugin, args)
+    } else if (typeof plugin === 'function') {
+      plugin.apply(null, args)
+    }
+    installedPlugins.push(plugin)
+    return this
+  }
+}
+```
+
+同一plugin只能通过Vue.use调用一次
+
+plugin必须为带有install方法的对象或本身就是个方法
+
+##### nextTick（Promise环境）
+
+```
+src/core/util/next-tick.js
+const callbacks = []
+let pending = false
+let timerFunc
+
+function flushCallbacks () {
+  pending = false
+  const copies = callbacks.slice(0)
+  callbacks.length = 0
+  for (let i = 0; i < copies.length; i++) {
+    copies[i]()
+  }
+}
+
+const p = Promise.resolve()
+timerFunc = () => {
+  p.then(flushCallbacks)
+  // In problematic UIWebViews, Promise.then doesn't completely break, but
+  // it can get stuck in a weird state where callbacks are pushed into the
+  // microtask queue but the queue isn't being flushed, until the browser
+  // needs to do some other work, e.g. handle a timer. Therefore we can
+  // "force" the microtask queue to be flushed by adding an empty timer.
+  if (isIOS) setTimeout(noop)
+}
+  
+export function nextTick (cb?: Function, ctx?: Object) {
+  let _resolve
+  callbacks.push(() => {
+    if (cb) {
+      try {
+        cb.call(ctx)
+      } catch (e) {
+        handleError(e, ctx, 'nextTick')
+      }
+    } else if (_resolve) {
+      _resolve(ctx)
+    }
+  })
+  if (!pending) {
+    pending = true
+    timerFunc()
+  }
+  // $flow-disable-line
+  if (!cb && typeof Promise !== 'undefined') {
+    return new Promise(resolve => {
+      _resolve = resolve
+    })
+  }
+}
+```
+
+nextTick依赖Promise来实现延迟回调

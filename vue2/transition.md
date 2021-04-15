@@ -221,10 +221,10 @@ export function enter (vnode: VNodeWithData, toggleDisplay: ?() => void) {
 6. 若初次渲染且appear为falsy当不为空字符时则跳过入场动画处理
 7. 获取入场动画类名、钩子函数、动画时间、动画方式等内容
 8. 创建入场动画结束回调，回调中会去除已添加的样式然后根据是否被取消来决定触发enterCancelledHook或afterEnterHook钩子并移除自身
-9. 若vnode.data.show为falsy则添加一个inset钩子，回调中执行入场处理
+9. 若vnode.data.show为falsy则添加一个insert钩子，回调中执行enterHook钩子
 10. 触发beforeEnterHook钩子
 11. 若使用css处理动画则执行css动画，并在下一帧时当入场动画未取消且未自定义入场实现则在指定时间后或css动画执行结束后触发动画结束回调
-12. 若vnode.data.show为truly则执行入场处理
+12. 若vnode.data.show为truly则执行enterHook钩子
 13. 若不使用css处理动画且未自定义入场实现直接触发动画结束回调
 
 ```

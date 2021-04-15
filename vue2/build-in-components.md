@@ -1,4 +1,4 @@
-abstract组件和普通组件有部分区别。
+abstract组件和普通组件有部分区别
 
 ```
 src/core/vdom/create-component.js
@@ -376,5 +376,15 @@ export default {
 
 transition-group会根据tag渲染一个顶层dom节点并且修改了_update函数
 
-render需明确复用的节点和移除的节点，所以子节点需要key，然后根据transition模块的解析规则合并属性添加给子节点
+transition-group主要进行了下列操作：
 
+- render时根据transition模块的解析规则合并属性添加给子节点
+- kept用于保存保留的子节点，每次render函数被调用时重新生成并记录节点当前位置pos
+- 覆盖_update函数，在原流程之前通过一次patch（diff当前vnode与kept，不会移动复用的节点）来移除节点，然后继续原update流程
+- updated钩子中对保留的子节点进行move操作
+  - 移除未结束的入场动画和移动动画
+  - 获取节点当前位置newPos
+  - 对比新旧位置，若发生变化则添加move相关style并进行标记
+  - 若节点被标记，添加moveCb回调，添加moveClass并移除move相关style，最后添加动画结束监听
+
+通过render函数可知transition-group是通过key来判断是否复用并获取变化前位置，则key不能为index否则变化前后位置必定一致将不会触发move操作

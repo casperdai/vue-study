@@ -76,6 +76,8 @@ export class Observer {
 
 若不是数组，则对每个key进行劫持代理
 
+##### defineReactive
+
 ```
 src/core/observer/index.js
 export function defineReactive (
@@ -145,3 +147,57 @@ export function defineReactive (
 - 对值进行响应式处理
 - get时进行依赖收集
 - set时若值发生变化时对新值进行响应式处理然后进行变更通知
+
+childOb的作用是通过$set进行扩展时可进行重新渲染
+
+```
+key：someKey  val：{} | []
+若仅引用到$data.someKey时，对val通过$set进行扩展，这时将不会触发vm重新渲染
+因为val并未进行响应式处理，即val并未与vm进行关联
+```
+
+##### arrayMethods
+
+```
+src/core/observer/array.js
+const arrayProto = Array.prototype
+export const arrayMethods = Object.create(arrayProto)
+
+const methodsToPatch = [
+  'push',
+  'pop',
+  'shift',
+  'unshift',
+  'splice',
+  'sort',
+  'reverse'
+]
+
+/**
+ * Intercept mutating methods and emit events
+ */
+methodsToPatch.forEach(function (method) {
+  // cache original method
+  const original = arrayProto[method]
+  def(arrayMethods, method, function mutator (...args) {
+    const result = original.apply(this, args)
+    const ob = this.__ob__
+    let inserted
+    switch (method) {
+      case 'push':
+      case 'unshift':
+        inserted = args
+        break
+      case 'splice':
+        inserted = args.slice(2)
+        break
+    }
+    if (inserted) ob.observeArray(inserted)
+    // notify change
+    ob.dep.notify()
+    return result
+  })
+})
+```
+
+对常用方法进行一个封装，当方法被调用时若发生了数据变更则进行响应式处理，最后通过ob.dep触发通知

@@ -46,7 +46,37 @@ export function extractPropsFromVNodeData (
   return res
 }
 
-初始化
+function checkProp (
+  res: Object,
+  hash: ?Object,
+  key: string,
+  altKey: string,
+  preserve: boolean
+): boolean {
+  if (isDef(hash)) {
+    if (hasOwn(hash, key)) {
+      res[key] = hash[key]
+      if (!preserve) {
+        delete hash[key]
+      }
+      return true
+    } else if (hasOwn(hash, altKey)) {
+      res[key] = hash[altKey]
+      if (!preserve) {
+        delete hash[altKey]
+      }
+      return true
+    }
+  }
+  return false
+}
+```
+
+Ctor.options.props定义了props，数据存储在vnode.componentOptions.propsData中，数据来源于data.attrs或data.props
+
+##### 初始化
+
+```
 src/core/instance/init.js
 export function initInternalComponent (vm: Component, options: InternalComponentOptions) {
   const opts = vm.$options = Object.create(vm.constructor.options)
@@ -83,8 +113,13 @@ function initProps (vm: Component, propsOptions: Object) {
   }
   toggleObserving(true)
 }
+```
 
-更新
+props在初始化后均挂载在vm._props上，通过vm.key访问的均是映射，组件定义时的props映射在Ctro.property上，构造时传入的props映射在实例上
+
+##### 更新
+
+```
 src/core/instance/lifecycle.js
 export function updateChildComponent (
   vm: Component,
@@ -112,8 +147,4 @@ export function updateChildComponent (
 }
 ```
 
-props在初始化后均挂载在vm._props上，通过vm.key访问的均是映射，组件定义时的props映射在Ctro.property上，构造时的props映射在实例上
-
-prop从vm.$options.propsData中获取
-
-propDatas从vnode.data.attrs中获取
+根据_propKeys遍历并进行重新赋值，因初始化时通过defineReactive进行的赋值则若值有变化且组件使用了对应的prop则会进行刷新

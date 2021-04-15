@@ -62,6 +62,6 @@ function createComputedGetter (key) {
 }
 ```
 
-- computed只是一个lazy watcher不会初始化值，仅在被访问时才根据dirty标识去决定是否需要刷新值
-- vm.key访问的computed是一个映射，组件定义时的computed映射在Ctro.property上，构造时的computed映射在实例上
+- computed只是一个lazy watcher，不会初始化值，仅在被访问时才根据dirty标识去决定是否需要刷新值
+- vm.key访问的是一个映射，组件定义时的computed映射在Ctro.property上，构造时传入的computed映射在实例上
 - computed被访问时让收集了computed的Dep收集依赖computed的Watcher，固computed依赖的数据变化时依赖computed的Watcher能被触发更新

@@ -1,156 +1,21 @@
-##### 生成vnode
+##### 组件创建过程
+
 
 ```
-<component/>
-_c('component')
-
-src/core/instance/render.js
-export function initRender (vm: Component) {
-  ...
-  vm._c = (a, b, c, d) => createElement(vm, a, b, c, d, false)
-  ...
-}
-
-src/core/vdom/create-element.js
-export function createElement (
-  context: Component,
-  tag: any,
-  data: any,
-  children: any,
-  normalizationType: any,
-  alwaysNormalize: boolean
-): VNode | Array<VNode> {
-  ...
-  return _createElement(context, tag, data, children, normalizationType)
-}
-
-export function _createElement (
-  context: Component,
-  tag?: string | Class<Component> | Function | Object,
-  data?: VNodeData,
-  children?: any,
-  normalizationType?: number
-): VNode | Array<VNode> {
-  ...
-  if (typeof tag === 'string') {
-    ...
-    } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
-      // component
-      vnode = createComponent(Ctor, data, context, children, tag)
-    ...
-  ...
-}
-
-src/core/vdom/create-component.js
-export function createComponent (
-  Ctor: Class<Component> | Function | Object | void,
-  data: ?VNodeData,
-  context: Component,
-  children: ?Array<VNode>,
-  tag?: string
-): VNode | Array<VNode> | void {
-  ...
-  data = data || {}
-
-  // resolve constructor options in case global mixins are applied after
-  // component constructor creation
-  resolveConstructorOptions(Ctor)
-
-  // transform component v-model data into props & events
-  if (isDef(data.model)) {
-    transformModel(Ctor.options, data)
-  }
-
-  // extract props
-  const propsData = extractPropsFromVNodeData(data, Ctor, tag)
-
-  // functional component
-  if (isTrue(Ctor.options.functional)) {
-    return createFunctionalComponent(Ctor, propsData, data, context, children)
-  }
-
-  // extract listeners, since these needs to be treated as
-  // child component listeners instead of DOM listeners
-  const listeners = data.on
-  // replace with listeners with .native modifier
-  // so it gets processed during parent component patch.
-  data.on = data.nativeOn
-
-  ...
-
-  // install component management hooks onto the placeholder node
-  installComponentHooks(data)
-
-  // return a placeholder vnode
-  const name = Ctor.options.name || tag
-  const vnode = new VNode(
-    `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
-    data, undefined, undefined, undefined, context,
-    { Ctor, propsData, listeners, tag, children },
-    asyncFactory
-  )
-
-  return vnode
-}
+src/core/vdom/patch.js
+new Vue -> patch -> createElm -> [ createChildren -> ] createComponent -> hook.init -> hook.insert -> mounted
 ```
 
-调用render函数时，创建组件vnode主要进行了下列操作：
+父子节点生命周期为：
 
-1. 构造函数更新
-2. 处理v-model
-3. propsData获取，从data.attrs中过滤出定义的props
-4. 若是函数式组件返回**createFunctionalComponent**构造的vnode，跳出
-5. 替换事件，listeners = data.on，data.on = data.nativeOn
-6. 添加hooks
-7. 创建vnode，componentOptions = { Ctor, propsData, listeners, tag, children }
+父beforeCreate -> 父created -> 父beforeMount -> 子beforeCreate(hook.init) -> 子created -> 子beforeMount -> 子mounted(hook.insert) -> 父mounted
 
-##### 函数式组件
+##### 组件更新流程
 
 ```
-src/core/vdom/create-functional-component.js
-export function createFunctionalComponent (
-  Ctor: Class<Component>,
-  propsData: ?Object,
-  data: VNodeData,
-  contextVm: Component,
-  children: ?Array<VNode>
-): VNode | Array<VNode> | void {
-  const options = Ctor.options
-  const props = {}
-  const propOptions = options.props
-  if (isDef(propOptions)) {
-    for (const key in propOptions) {
-      props[key] = validateProp(key, propOptions, propsData || emptyObject)
-    }
-  } else {
-    if (isDef(data.attrs)) mergeProps(props, data.attrs)
-    if (isDef(data.props)) mergeProps(props, data.props)
-  }
-
-  const renderContext = new FunctionalRenderContext(
-    data,
-    props,
-    children,
-    contextVm,
-    Ctor
-  )
-
-  const vnode = options.render.call(null, renderContext._c, renderContext)
-
-  if (vnode instanceof VNode) {
-    return cloneAndMarkFunctionalResult(vnode, data, renderContext.parent, options, renderContext)
-  } else if (Array.isArray(vnode)) {
-    const vnodes = normalizeChildren(vnode) || []
-    const res = new Array(vnodes.length)
-    for (let i = 0; i < vnodes.length; i++) {
-      res[i] = cloneAndMarkFunctionalResult(vnodes[i], data, renderContext.parent, options, renderContext)
-    }
-    return res
-  }
-}
+src/core/vdom/patch.js
+patch -> patchVnode -> hook.prepatch -> updateChildren -> updated
 ```
-
-函数式组件仅透传render函数生成的数据，为render函数提供一个封装过的上下文环境
 
 ##### 实例化
 
