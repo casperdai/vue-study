@@ -10,7 +10,7 @@
 
 ##### 响应式
 
-[依赖收集](./vue2/reactive/依赖收集.md)
+[依赖收集与调度](./vue2/reactive/schedule.md)
 
 [observe](./vue2/reactive/observe.md)
 
@@ -111,3 +111,19 @@
 [Module](./vuex/Module.md)
 
 [map](./vuex/map.md)
+
+### Vue3(3.0.11)
+
+[Vue2和Vue3的区别](./vue-diff.md)
+
+##### 响应式
+
+[reactive](./vue3/reactive.md)
+
+[ref](./vue3/ref.md)
+
+[computed](./vue3/computed.md)
+
+[effect](./vue3/effect.md)
+
+[调度](./vue3/schedule.md)

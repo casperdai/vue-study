@@ -7,13 +7,12 @@ root._vnode ?
 root._vode = vnode
 patch(oldVnode, vnode)
 sameVnode(oldVnode, vnode) ?
-	yes: patchVnode
+	yes: patchVnode  cbs.update update hook prepatch hook
 		children ?
 			yes: sameVnode(oldChildVnode, childVnode)
-			no: 
-                html element: update dom
-                component: prepatch hook
-	no: createElm
+			no: update dom
+		postpatch hook
+	no: createElm(vnode) removeVnodes([oldVnode])
 root.$el = vnode.elm
 ```
 
@@ -42,7 +41,7 @@ create component instance ?  init hook
 	no: create html element(vnode.elm = document.create)
     	children ?
     		yes: createElm(child)
-insert into parent
+insert into parent (insert hook)
 ```
 
 `createElm`是vdom到DOM的过程
