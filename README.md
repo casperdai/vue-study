@@ -118,12 +118,36 @@
 
 ##### 响应式
 
-[reactive](./vue3/reactive.md)
+[reactive](./vue3/reactive/reactive.md)
 
-[ref](./vue3/ref.md)
+[ref](./vue3/reactive/ref.md)
 
-[computed](./vue3/computed.md)
+[computed](./vue3/reactive/computed.md)
 
-[effect](./vue3/effect.md)
+[effect](./vue3/reactive/effect.md)
 
-[调度](./vue3/schedule.md)
+[调度](./vue3/reactive/schedule.md)
+
+##### 渲染器
+
+[createApp](./vue3/render/createApp.md)
+
+[vnode](./vue3/render/vnode.md)
+
+[组件实例化](./vue3/render/component.md)
+
+[renderer](./vue3/render/renderer.md)
+
+##### patch
+
+[属性](./vue3/patch/prop.md)
+
+[Block](./vue3/patch/block.md)
+
+[文本、注释](./vue3/patch/common.md)
+
+[Fragment](./vue3/patch/fragment.md)
+
+[元素节点](./vue3/patch/element.md)
+
+[组件](./vue3/patch/component.md)
